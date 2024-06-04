@@ -1,5 +1,5 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit'
-import { ProductProps } from 'components/Product/Product'
+
 
 interface UserState {
   isLoggedIn: boolean
@@ -9,8 +9,6 @@ interface UserState {
     name: string
     data: string
   }[]
-  product: ProductProps[]
-	products: ProductProps[]
   userRole: string
 }
 
@@ -19,8 +17,6 @@ const initialState: UserState = {
   tokenRole: '',
   user: [],
   profile: [{ name: '', data: '' }],
-  product: [],
-  products: [],
   userRole: '',
 }
 
@@ -36,8 +32,6 @@ const userSlice = createSlice({
       state.isLoggedIn = false
       state.user = []
       state.profile = []
-			state.product=[]
-			state.products=[]
 			state.userRole=''
     },
     userRole(state, action: PayloadAction<string>) {
@@ -46,16 +40,10 @@ const userSlice = createSlice({
     setUserProfile(state, action: PayloadAction<{ name: string; data: string }[]>) {
       state.profile = action.payload
     },
-    setUserProducts(state, action: PayloadAction<ProductProps[]>) {
-      state.product = action.payload
-    },
-    setProducts(state, action: PayloadAction<ProductProps[]>) {
-      state.products = action.payload
-    },
   },
 })
 
-export const { activeUser, removeUser, setUserProfile, userRole, setUserProducts, setProducts } =
+export const { activeUser, removeUser, setUserProfile, userRole} =
   userSlice.actions
 
 export default userSlice.reducer
