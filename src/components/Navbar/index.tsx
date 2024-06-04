@@ -5,28 +5,19 @@ import Link from 'next/link';
 import Button from '../Button/Button';
 import { usePathname } from 'next/navigation';
 import { useSession, signIn, signOut } from 'next-auth/react';
-import { handleSignOut } from '@/app/api/auth/authActions';
+
 
 const Navbar = () => {
   const [isMenuOpen, setMenuOpen] = useState(false);
   const pathname = usePathname();
-  const { data: session, status } = useSession();
-
+  const { data: session } = useSession()
+console.log(session)
   const pages = [
     { name: 'Home', url: '/' },
     { name: 'Dashboard', url: '/dashboard', protected: true },
     { name: 'Analytics', url: '/analytics', protected: true },
     { name: 'Report', url: '/report', protected: true },
   ];
-
-  useEffect(() => {
-    if (status === 'authenticated') {
-      console.log('Session updated: User is logged in.');
-    } else if (status === 'unauthenticated') {
-      console.log('Session updated: User is logged out.');
-    }
-  }, [session, status]);
-
   return (
     <div className="sticky left-0 top-0 z-50 mx-auto flex w-full items-center bg-neutral-80 px-4 text-shades-white">
       <Image
@@ -70,12 +61,13 @@ const Navbar = () => {
           />
           {isMenuOpen && (
             <div className="absolute right-0 mt-3 w-[200px] rounded-md border-2 border-solid border-primary-60 bg-primary-70 py-4 text-shades-white">
+              {session.user?.name}
               <div className="mx-1 p-2 hover:bg-primary-60">Profile</div>
               <div className="mx-1 p-2 hover:bg-primary-60">Settings</div>
               <div
                 onClick={(e) => {
                   e.preventDefault();
-                  handleSignOut();
+                  signOut()
                 }}
                 className="mx-1 p-2 hover:bg-primary-60"
               >
@@ -89,7 +81,7 @@ const Navbar = () => {
           <Button type="secondary" onClick={() => signIn()}>
             <Link href={'/auth/login'}> Login</Link>
           </Button>
-          <Button type="secondary">Register</Button>
+          <Button type="secondary"> <Link href={'/auth/register'}>Register</Link></Button>
         </div>
       )}
       <div

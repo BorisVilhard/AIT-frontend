@@ -1,22 +1,22 @@
-import { FormProvider, useForm } from 'react-hook-form';
+'use client';
+
 import { zodResolver } from '@hookform/resolvers/zod';
 import * as zod from 'zod';
 import { InputField } from '@/components/Fields';
 import Button from '@/components/Button/Button';
+import { FormProvider, useForm } from 'react-hook-form';
+import { signIn } from 'next-auth/react';
+import axios from 'axios';
 
 
 export interface LoginFormValues {
-  email: string;
+  username: string;
   password: string;
 }
 
-interface Props {
-  onSubmit: (values: LoginFormValues) => void;
-}
-
-const RegisterForm = (props: Props) => {
+const RegisterForm = () => {
   const schema = zod.object({
-    email: zod.string().email('Wrong Email Format').min(1, { message: 'Required' }),
+    username: zod.string().min(1, { message: 'Required' }),
     password: zod.string().min(1, { message: 'Required' }),
   });
 
@@ -24,25 +24,47 @@ const RegisterForm = (props: Props) => {
     resolver: zodResolver(schema),
   });
 
+
+ const handleRegister = async (data: LoginFormValues) => {
+      try {
+        const response = await axios.post('http://localhost:3500/register', data, {
+          headers: { 'Content-Type': 'application/json' },
+        });
+          await signIn('credentials', {
+            username:data.username,
+            password:data.password,
+            callbackUrl: '/'
+          });
+      } catch (error: any) {
+        if (axios.isAxiosError(error) && error.response?.status === 409) {
+          console.log('Username already taken. Please try another one.');
+        } else {
+          console.error('Registration error:', error);
+          console.log('An error occurred during registration. Please try again.');
+        }
+      }
+    };
+
   return (
     <FormProvider {...methods}>
-      <form className="m-4 flex w-[350px] flex-col" onSubmit={methods.handleSubmit(props.onSubmit)}>
-        <InputField<LoginFormValues>
-          name="email"
-          placeholder={'company name'}
-          className="mb-[10px]"
-        />
-        <InputField<LoginFormValues> name="email" placeholder={'email'} className="mb-[10px]" />
-        <InputField<LoginFormValues>
-          name="password"
-          placeholder={'password'}
-          className="mb-[10px]"
-        />
-        <InputField<LoginFormValues> name="email" placeholder={'verify password'} />
-        <Button radius="squared" className="mt-[20px]" htmlType="submit">
-          Register
-        </Button>
-      </form>
+        <form
+          className="m-4 flex w-[350px] flex-col"
+          onSubmit={methods.handleSubmit((data) => {
+          handleRegister(data)
+          })}
+        >
+          <InputField<LoginFormValues>
+            name="username"
+            placeholder={'username'}
+            className="mb-[10px]"
+          />
+          <InputField<LoginFormValues> name="password" placeholder={'password'} />
+
+          <Button radius="squared" className="mt-[20px]" htmlType="submit">
+            Login
+          </Button>
+        </form>
+
     </FormProvider>
   );
 };

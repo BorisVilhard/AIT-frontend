@@ -56,9 +56,9 @@ type lineargradient = {
 
 const LineGraph = ({ lineargradient, id, lineColor, margin, width }: lineargradient) => {
   return (
-    <div style={{ width: '18vw', height: '110px' }}>
+    <div style={{ width: '200px',minWidth:'110px', height: '100px' }}>
       <ResponsiveContainer width="100%" height="100%">
-        <LineChart width={500} height={300} data={data}>
+        <LineChart width={500} height={500} data={data}>
           <defs>{lineargradient}</defs>
           <Tooltip />
           <Line

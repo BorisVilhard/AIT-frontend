@@ -14,6 +14,12 @@ const Dashboard = () => {
     { title: 'Total Income', value: 200, percetageDifference: '14%' },
     { title: 'Total Income', value: 200, percetageDifference: '14%' },
     { title: 'Total Income', value: 200, percetageDifference: '14%' },
+    { title: 'Total Income', value: 200, percetageDifference: '14%' },
+    { title: 'Total Income', value: 200, percetageDifference: '14%' },
+    { title: 'Total Income', value: 200, percetageDifference: '14%' },
+    { title: 'Total Income', value: 200, percetageDifference: '14%' },
+    { title: 'Total Income', value: 200, percetageDifference: '14%' },
+    { title: 'Total Income', value: 200, percetageDifference: '14%' },
   ];
 
   return (
@@ -22,8 +28,8 @@ const Dashboard = () => {
         <DataBar activeSection={(section) => setSectionSwitch(section)} />
       </div>
 
-      <div className="top-[100px] z-20 mt-[120px] flex w-full flex-col">
-        <div className="flex flex-row justify-between sm:flex-col md:flex-col lg:flex-row">
+      <div className='w-[95%] flex justify-center z-20'>
+        <div className="grid z-20 mt-[120px] gap-2 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3">
           {lineGraphData.map((data, index) => {
             return (
               <ChartWrapper
@@ -34,7 +40,6 @@ const Dashboard = () => {
               >
                 <LineGraph
                   id={index.toString()}
-                  margin="0 0 0 30px"
                   lineargradient={
                     <linearGradient id={index.toString()} x1="0%" y1="0%" x2="100%" y2="0%">
                       <stop offset="0%" stopColor="rgba(7,7,156,1)" />
@@ -46,21 +51,7 @@ const Dashboard = () => {
             );
           })}
         </div>
-
-        <div className="flex justify-between sm:flex-col md:flex-col lg:flex-row">
-          <ChartWrapper
-            title={'Total Income'}
-            className="w-fit lg:w-fit"
-            value={1212}
-            percentageDifference="14%"
-          >
-            <AreaGraph />
-          </ChartWrapper>
-          <ChartWrapper className="w-fit lg:w-fit" title={'User Behavior'}>
-            <PieGraph />
-          </ChartWrapper>
         </div>
-      </div>
     </div>
   );
 };

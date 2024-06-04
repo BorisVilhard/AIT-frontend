@@ -10,6 +10,7 @@ import { ReactNode } from 'react';
 import AuthProvider from './context/AuthProvider';
 import { usePathname } from 'next/navigation';
 
+
 const Layout = ({ children }: { children: ReactNode }) => {
   const currentPath = usePathname();
   const RenderLayout = ({ children }: { children: ReactNode }) => {
@@ -48,7 +49,7 @@ const Layout = ({ children }: { children: ReactNode }) => {
               </Button>
             </div>
           </div>
-          <div className="container m-[20px] overflow-hidden rounded-[30px] bg-primary-30 sm:hidden md:hidden lg:block">
+          <div className="container m-[20px] overflow-hidden rounded-[30px] hidden bg-primary-30 lg:block">
             <Image
               src={'/img/robot.png'}
               width={1400}

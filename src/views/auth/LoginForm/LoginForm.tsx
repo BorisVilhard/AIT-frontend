@@ -1,13 +1,12 @@
 'use client';
 
-import { providerMap } from '@/utils/auth';
-
 import { zodResolver } from '@hookform/resolvers/zod';
 import * as zod from 'zod';
 import { InputField } from '@/components/Fields';
 import Button from '@/components/Button/Button';
 import { FormProvider, useForm } from 'react-hook-form';
-import { handleSignIn } from '@/app/api/auth/authActions';
+import { signIn } from 'next-auth/react';
+
 
 export interface LoginFormValues {
   username: string;
@@ -24,17 +23,21 @@ const LoginForm = () => {
     resolver: zodResolver(schema),
   });
 
+  const handleSignIn = async (data:LoginFormValues) => {
+    await signIn('credentials', {
+      username:data.username,
+      password:data.password,
+      callbackUrl: '/'
+    });
+  };
+
   return (
     <FormProvider {...methods}>
-      {Object.values(providerMap).map((provider) => (
+     
         <form
           className="m-4 flex w-[350px] flex-col"
-          key={provider.id}
           onSubmit={methods.handleSubmit((data) => {
-            const formData = new FormData();
-            formData.append('username', data.username);
-            formData.append('password', data.password);
-            handleSignIn(provider.id, formData);
+          handleSignIn(data)
           })}
         >
           <InputField<LoginFormValues>
@@ -48,7 +51,7 @@ const LoginForm = () => {
             Login
           </Button>
         </form>
-      ))}
+
     </FormProvider>
   );
 };
