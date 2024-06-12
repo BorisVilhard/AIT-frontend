@@ -3,15 +3,20 @@ import Image from 'next/image';
 import { AiOutlineClose, AiOutlineMenu } from 'react-icons/ai';
 import Link from 'next/link';
 import Button from '../Button/Button';
-import { usePathname } from 'next/navigation';
+import { redirect, usePathname } from 'next/navigation';
 import { useSession, signIn, signOut } from 'next-auth/react';
+import Loading from '@/app/loading';
 
 
 const Navbar = () => {
   const [isMenuOpen, setMenuOpen] = useState(false);
   const pathname = usePathname();
-  const { data: session } = useSession()
-console.log(session)
+  const { data: session, status } = useSession();
+
+  if (status === 'loading') {
+    return <Loading />;
+  }
+
   const pages = [
     { name: 'Home', url: '/' },
     { name: 'Dashboard', url: '/dashboard', protected: true },
@@ -61,7 +66,7 @@ console.log(session)
           />
           {isMenuOpen && (
             <div className="absolute right-0 mt-3 w-[200px] rounded-md border-2 border-solid border-primary-60 bg-primary-70 py-4 text-shades-white">
-              {session.user?.name}
+             <div className='flex justify-center bg-primary-50 p-1 mx-2 mb-2 rounded-lg'>{session.user?.name}</div>
               <div className="mx-1 p-2 hover:bg-primary-60">Profile</div>
               <div className="mx-1 p-2 hover:bg-primary-60">Settings</div>
               <div

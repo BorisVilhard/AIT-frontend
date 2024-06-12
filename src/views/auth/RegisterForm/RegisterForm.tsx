@@ -12,12 +12,14 @@ import axios from 'axios';
 export interface LoginFormValues {
   username: string;
   password: string;
+  confirmPassword: string;
 }
 
 const RegisterForm = () => {
   const schema = zod.object({
     username: zod.string().min(1, { message: 'Required' }),
     password: zod.string().min(1, { message: 'Required' }),
+    confirmPassword: zod.string().min(1, { message: 'Required' }),
   });
 
   const methods = useForm<LoginFormValues>({
@@ -27,7 +29,7 @@ const RegisterForm = () => {
 
  const handleRegister = async (data: LoginFormValues) => {
       try {
-        const response = await axios.post('http://localhost:3500/register', data, {
+       await axios.post('http://localhost:3500/register', data, {
           headers: { 'Content-Type': 'application/json' },
         });
           await signIn('credentials', {
@@ -59,6 +61,7 @@ const RegisterForm = () => {
             className="mb-[10px]"
           />
           <InputField<LoginFormValues> name="password" placeholder={'password'} />
+          <InputField<LoginFormValues> name="confirmPassword" placeholder={'confirm password'} />
 
           <Button radius="squared" className="mt-[20px]" htmlType="submit">
             Login

@@ -65,9 +65,12 @@ const Layout = ({ children }: { children: ReactNode }) => {
     } else {
       return (
         <div>
-          <Navbar />
-          {children}
-        </div>
+        <Navbar />
+        <div className='flex flex-col justify-center items-center'>
+            {children}
+            </div>
+       </div>
+    
       );
     }
   };

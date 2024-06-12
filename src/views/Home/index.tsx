@@ -9,13 +9,13 @@ const Home = () => {
        <InfoCard
         label="Analyze website user behavior to enhance your strategic advantage"
         imgSrc="/img/mac.png"
-        reversedTransform
       />
       <InfoCard
+        reversedTransform
         label="Utilize AGI to aggregate information from all sources and provide succinct chart summaries"
         imgSrc="/img/mac.png"
       />
-      <Footer />
+      <Footer className='my-[100px]' />
     </>
   );
 };

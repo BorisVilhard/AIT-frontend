@@ -1,59 +1,71 @@
-import { DateRangePicker } from 'react-date-range';
-import { useState } from 'react';
+import { ChangeEvent, useState } from 'react';
 import Button from '@/components/Button/Button';
-import ToggleButton from '@/components/ToggleButton/ToggileButton';
+import Dropdown from '@/components/Dropdown/Dropdown';
+import axios from 'axios';
 
 interface Props {
-  activeSection: (section: boolean) => void;
+  getData: (section: []) => void;
 }
 
 const DataBar = (props: Props) => {
   const [openCalendar, setOpenCalenda] = useState(false);
-  const [hasSocialMedia, setHasSocialMedia] = useState(false);
+  const [file, setFile] = useState<File | null>(null);
 
-  const handleDataFromChild = (data: boolean) => {
-    props.activeSection(data);
-    setHasSocialMedia(data);
+  const handleFileChange = (event: ChangeEvent<HTMLInputElement>) => {
+    if (event.target.files) {
+      setFile(event.target.files[0]);
+    }
   };
 
-  const date: Date = new Date();
-  date.getDate();
-  const selectionRange = {
-    startDate: new Date(),
-    endDate: new Date(),
-    key: 'selection',
+  const handleSubmit = async () => {
+    if (!file) {
+      alert('Please select a file first.');
+      return;
+    }
+
+    const formData = new FormData();
+    formData.append('file', file);
+
+    try {
+      const response = await fetch('http://127.0.0.1:5000/upload', {
+        method: 'POST',
+        body: formData,
+      });
+      const responseData = await response.json();
+      props.getData(responseData);
+    } catch (error) {
+      console.error('Error:', error);
+    }
   };
 
   return (
-    <div className="relative mb-5 flex h-[200px] w-full items-start justify-between bg-neutral-80 px-[25px] py-[15px]">
-      <div className="relative">
-        <Button
-          className="bg-shades-white text-shades-black"
-          onClick={() => setOpenCalenda(!openCalendar)}
-        >
-          <div className="text-shades-black">Select date data</div>
-        </Button>
-
+    <div className="relative mb-5 flex h-[200px] w-full items-start justify-center bg-neutral-80 px-[25px] py-[15px]">
+      <div className="flex w-[95%]  items-start justify-center">
+        <div className="relative">
+          <Button
+            className="bg-shades-white text-shades-black"
+            onClick={() => setOpenCalenda(!openCalendar)}
+          >
+            <div className="text-shades-black">Date</div>
+          </Button>
+          {/*        
         {openCalendar && (
           <div className="absolute top-20 z-30 rounded-2xl border-2 border-primary-90 bg-shades-white p-4">
             <DateRangePicker ranges={[selectionRange]} onChange={() => {}} />
           </div>
-        )}
-      </div>
+        )} */}
+        </div>
 
-      <div className="absolute left-0 right-0 mx-auto" style={{ width: 'fit-content' }}>
-        <ToggleButton
-          onToggleClick={handleDataFromChild}
-          onLabel="Website"
-          offLabel="Social Media"
-        />
-      </div>
+        <div className="absolute left-0 right-0 z-50 mx-auto" style={{ width: 'fit-content' }}>
+          <Dropdown name="hello" items={[{ label: 'hello', value: '' }]} onChange={() => {}} />
+        </div>
 
-      <div className="flex w-full justify-end">
-        <input id={'file'} type="file" style={{ display: 'none' }} />
-        <label htmlFor={'file'}>
-          <Button type="secondary">Upload Data</Button>
-        </label>
+        <div className="z-50 flex w-full justify-end">
+          <div className="absolute z-50">
+            <input type="file" onChange={handleFileChange} />
+            <button onClick={handleSubmit}>Upload File</button>
+          </div>
+        </div>
       </div>
     </div>
   );

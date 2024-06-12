@@ -25,9 +25,8 @@ export const options: NextAuthOptions = {
                   user: credentials?.username,
                   pwd: credentials?.password,
                 });
-                 console.log(res.data)
                 if (res.status === 200) {
-                  return res.data;
+                  return { id: res.data.refreshToken, name: res.data.username, password: res.data.refreshToken };
                 } else {
                   console.error(`Failed to log in with status: ${res.status}`);
                   return null;
@@ -44,25 +43,5 @@ export const options: NextAuthOptions = {
     },
     session: {
       strategy: 'jwt',
-    },
-    callbacks: {
-      jwt: async ({ token, user }) => {
-        if (user) {
-          token.id = user.id;
-          token.name = user.name;
-          token.email = user.email;
-        }
-        return token;
-      },
-      session: async ({ session, token }) => {
-        if (token) {
-          session.user = {
-            name: token.name,
-            email: token.email,
-          };
-        }
-        return session;
-      },
-    
     },
 }
