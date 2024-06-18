@@ -3,13 +3,16 @@
 import '../styles/globals.css';
 import '../styles/dataFlowAnimation.css';
 import '../styles/particleAnimation.scss';
-import Button from '@/components/Button/Button';
-import Navbar from '@/components/Navbar';
+import Button from '@/app/components/Button/Button';
+import Navbar from '@/app/components/Navbar';
 import Image from 'next/image';
 import { ReactNode } from 'react';
 import AuthProvider from './context/AuthProvider';
 import { usePathname } from 'next/navigation';
-
+import { signIn } from 'next-auth/react';
+import { FcGoogle } from 'react-icons/fc';
+import { Provider } from 'react-redux';
+import { store } from '@/redux/store';
 
 const Layout = ({ children }: { children: ReactNode }) => {
   const currentPath = usePathname();
@@ -19,6 +22,10 @@ const Layout = ({ children }: { children: ReactNode }) => {
         <div className="circle"></div>
       </div>
     ));
+
+    const handleClick = () => {
+      signIn('google');
+    };
 
     if (currentPath.startsWith('/auth/')) {
       return (
@@ -39,17 +46,13 @@ const Layout = ({ children }: { children: ReactNode }) => {
                 </div>
                 <div className="h-[2px] w-full bg-neutral-30" />
               </div>
-              <Button
-                radius="squared"
-                className="h-[55px] w-full border-neutral-50 bg-shades-white"
-              >
-                <div className="text-shades-black">
-                  {currentPath.startsWith('/auth/register') ? 'Register' : 'Log In'} With Google
-                </div>
+              <Button className="gap-5" radius="squared" onClick={handleClick}>
+                {currentPath.startsWith('/auth/register') ? 'Register' : 'Log In'} With
+                <FcGoogle size={'27px'} />
               </Button>
             </div>
           </div>
-          <div className="container m-[20px] overflow-hidden rounded-[30px] hidden bg-primary-30 lg:block">
+          <div className="container m-[20px] hidden overflow-hidden rounded-[30px] bg-primary-30 lg:block">
             <Image
               src={'/img/robot.png'}
               width={1400}
@@ -64,13 +67,10 @@ const Layout = ({ children }: { children: ReactNode }) => {
       );
     } else {
       return (
-        <div>
-        <Navbar />
-        <div className='flex flex-col justify-center items-center'>
-            {children}
-            </div>
-       </div>
-    
+        <Provider store={store}>
+          <Navbar />
+          <div className="flex flex-col items-center justify-center">{children}</div>
+        </Provider>
       );
     }
   };
@@ -79,9 +79,11 @@ const Layout = ({ children }: { children: ReactNode }) => {
     <html lang="en">
       <head />
       <body>
-        <AuthProvider>
-          <RenderLayout>{children}</RenderLayout>
-        </AuthProvider>
+        <Provider store={store}>
+          <AuthProvider>
+            <RenderLayout>{children}</RenderLayout>
+          </AuthProvider>
+        </Provider>
       </body>
     </html>
   );

@@ -1,6 +1,5 @@
 import LoginForm from '@/views/auth/LoginForm/LoginForm';
 
-
 const login = () => {
   return <LoginForm />;
 };

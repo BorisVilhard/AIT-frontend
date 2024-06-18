@@ -5,16 +5,23 @@ import Link from 'next/link';
 import Button from '../Button/Button';
 import { redirect, usePathname } from 'next/navigation';
 import { useSession, signIn, signOut } from 'next-auth/react';
-import Loading from '@/app/loading';
-
+import { useDispatch, useSelector } from 'react-redux';
+import { logOut, selectCurrentUser, setCredentials } from '@/redux/authSlice';
 
 const Navbar = () => {
   const [isMenuOpen, setMenuOpen] = useState(false);
   const pathname = usePathname();
+  const dispatch = useDispatch();
   const { data: session, status } = useSession();
-
-  if (status === 'loading') {
-    return <Loading />;
+  const user = useSelector(selectCurrentUser);
+  if (status !== 'loading') {
+    dispatch(
+      setCredentials({
+        username: session?.user?.name,
+        image: session?.user?.image,
+        email: session?.user?.email,
+      }),
+    );
   }
 
   const pages = [
@@ -24,7 +31,7 @@ const Navbar = () => {
     { name: 'Report', url: '/report', protected: true },
   ];
   return (
-    <div className="sticky left-0 top-0 z-50 mx-auto flex w-full items-center bg-neutral-80 px-4 text-shades-white">
+    <div className="sticky left-0 top-0 z-50 mx-auto flex  w-full items-center bg-neutral-80 px-4 text-shades-white">
       <Image
         src={'/img/companylogo.png'}
         width={85}
@@ -41,7 +48,7 @@ const Navbar = () => {
               .map((navLink, i) => (
                 <Link href={navLink.url} key={i}>
                   <p
-                    className={`${pathname === navLink.url ? 'font-medium' : ''} relative m-4 tracking-[0.105em]`}
+                    className={`${pathname === navLink.url ? 'font-medium' : ''} relative m-4 text-[1rem] tracking-[0.105em]`}
                   >
                     {navLink.name}
                     {pathname === navLink.url && (
@@ -57,22 +64,27 @@ const Navbar = () => {
       {session ? (
         <div className="relative mr-[20px] w-fit p-5">
           <Image
-            src={'/img/profile.png'}
-            width={44}
-            height={44}
+            src={user?.image ? user.image : '/img/profile.png'}
+            width={50}
+            height={50}
             alt="profile"
-            className="relative w-9 overflow-hidden rounded-full lg:w-11"
+            className="rounded-full"
             onClick={() => setMenuOpen(!isMenuOpen)}
           />
           {isMenuOpen && (
-            <div className="absolute right-0 mt-3 w-[200px] rounded-md border-2 border-solid border-primary-60 bg-primary-70 py-4 text-shades-white">
-             <div className='flex justify-center bg-primary-50 p-1 mx-2 mb-2 rounded-lg'>{session.user?.name}</div>
-              <div className="mx-1 p-2 hover:bg-primary-60">Profile</div>
-              <div className="mx-1 p-2 hover:bg-primary-60">Settings</div>
+            <div className="absolute right-0 z-50 mt-3 w-[200px] rounded-md border-2 border-solid border-primary-60 bg-primary-70 py-4 text-shades-white">
+              <div className="mx-2 mb-2 flex justify-center rounded-lg bg-primary-50 p-1">
+                {user?.username}
+              </div>
+              <Link href={'/profile'}>
+                <div className="mx-1 p-2 hover:bg-primary-60">Profile</div>
+              </Link>
               <div
                 onClick={(e) => {
                   e.preventDefault();
-                  signOut()
+                  signOut();
+                  dispatch(logOut());
+                  redirect('/');
                 }}
                 className="mx-1 p-2 hover:bg-primary-60"
               >
@@ -86,7 +98,9 @@ const Navbar = () => {
           <Button type="secondary" onClick={() => signIn()}>
             <Link href={'/auth/login'}> Login</Link>
           </Button>
-          <Button type="secondary"> <Link href={'/auth/register'}>Register</Link></Button>
+          <Button type="secondary">
+            <Link href={'/auth/register'}>Register</Link>
+          </Button>
         </div>
       )}
       <div
@@ -98,7 +112,7 @@ const Navbar = () => {
       <div
         className={
           false
-            ? 'border-r-gray-900 fixed left-0 top-0 z-10 h-full w-full border-r bg-shades-white duration-500 ease-in-out'
+            ? 'fixed left-0 top-0 z-10 h-full w-full border-r border-r-gray-900 bg-shades-white duration-500 ease-in-out'
             : 'fixed left-[-100%] duration-500 ease-in-out'
         }
       >

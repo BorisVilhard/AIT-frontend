@@ -32,7 +32,7 @@ const Button = ({
       onClick={onClick}
       type={htmlType}
       className={classNames(
-        'flex h-[50px] cursor-pointer items-center justify-center transition ease-in-out',
+        'flex h-[4vh] min-h-[45px] cursor-pointer items-center justify-center transition ease-in-out',
         {
           'w-full': block,
           'rounded-[10px]': radius === 'squared',

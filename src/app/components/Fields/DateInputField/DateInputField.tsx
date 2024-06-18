@@ -1,6 +1,8 @@
 import { FieldValues, Path, useFormContext } from 'react-hook-form';
-import classNames from 'classnames';
 import FieldWrapper from '../FieldWrapper/FieldWrapper';
+import Button from '../../Button/Button';
+import { DateRangePicker } from 'react-date-range';
+import { useState } from 'react';
 
 interface Props<T extends FieldValues> {
   name: Path<T>;
@@ -17,11 +19,13 @@ interface Props<T extends FieldValues> {
   type?: string;
 }
 
-const InputField = <T extends FieldValues>(props: Props<T>) => {
+const DateInputField = <T extends FieldValues>(props: Props<T>) => {
   const {
     register,
     formState: { errors },
   } = useFormContext();
+
+  const [openCalendar, setOpenCalenda] = useState(false);
 
   return (
     <FieldWrapper
@@ -31,22 +35,24 @@ const InputField = <T extends FieldValues>(props: Props<T>) => {
       error={errors[props.name]?.message as string}
       helperText={props.helperText}
       required={props.required}
+      noBorder
     >
-      <input
-        className={classNames(
-          `w-full border-none px-[15px] py-[11px] opacity-100 focus:outline-primary-80`,
-          {
-            'cursor-not-allowed bg-neutral-20 text-neutral-60': props.disabled === true,
-          },
+      <div className="relative">
+        <Button
+          className="bg-shades-white text-shades-black"
+          onClick={() => setOpenCalenda(!openCalendar)}
+        >
+          <div className="text-shades-black">Date</div>
+        </Button>
+
+        {openCalendar && (
+          <div className="absolute top-20 z-30 rounded-2xl border-2 border-primary-90 bg-shades-white p-4">
+            <DateRangePicker onChange={() => {}} />
+          </div>
         )}
-        type={props.type}
-        placeholder={props.placeholder}
-        defaultValue={props.defaultValue}
-        disabled={props.disabled}
-        {...register(props.name)}
-      />
+      </div>
     </FieldWrapper>
   );
 };
 
-export default InputField;
+export default DateInputField;

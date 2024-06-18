@@ -30,9 +30,12 @@ export const FileInputField = <T extends FieldValues>(props: Props<T>) => {
         error={errors[props.name]?.message as string}
         helperText={props.helperText}
         required={props.required}
+        noBorder
       >
         <input id={props.name} type="file" style={{ display: 'none' }} {...register(props.name)} />
-        <label htmlFor={props.name}>{props.content}</label>
+        <label className="border-none" htmlFor={props.name}>
+          {props.content}
+        </label>
       </FieldWrapper>
     </>
   );

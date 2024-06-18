@@ -1,13 +1,12 @@
-import { combineReducers, createStore } from 'redux'
-import userReducer from './userSlice'
+import { configureStore } from '@reduxjs/toolkit';
+import { apiSlice } from './apiSlice';
+import authReducer from './authSlice';
 
-
-const rootReducer = combineReducers({
-  user: userReducer,
-})
-
-
-export const store = createStore(rootReducer)
-
-
-export type RootState = ReturnType<typeof store.getState>
+export const store = configureStore({
+  reducer: {
+    [apiSlice.reducerPath]: apiSlice.reducer,
+    auth: authReducer,
+  },
+  middleware: (getDefaultMiddleware) => getDefaultMiddleware().concat(apiSlice.middleware),
+  devTools: true,
+});

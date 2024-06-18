@@ -1,5 +1,5 @@
 import Dashboard from '@/views/Dashboard';
 
-export default async function dashboard() {
+export default function dashboard() {
   return <Dashboard />;
 }
