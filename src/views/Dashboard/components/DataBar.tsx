@@ -1,33 +1,41 @@
-import { ChangeEvent, useState } from 'react';
-import Button from '@/app/components/Button/Button';
-import Dropdown from '@/app/components/Dropdown/Dropdown';
+import React from 'react';
+import { FormProvider, useForm, SubmitHandler } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import * as zod from 'zod';
-import { FileInputField } from '@/app/components/Fields/FileInputField/FileInputField';
-import { FormProvider, useForm } from 'react-hook-form';
+import Button from '@/app/components/Button/Button';
+import Dropdown from '@/app/components/Dropdown/Dropdown';
 import DateInputField from '@/app/components/Fields/DateInputField/DateInputField';
+import { FileInputField } from '@/app/components/Fields/FileInputField/FileInputField';
 
-interface Props {
-  onSubmit: (values: any) => void;
+interface FormData {
+  mediaType: string;
+  headline: string;
+  caption: string;
+  picUrl: string;
+  document?: File;
 }
 
-const DataBar = (props: Props) => {
-  const [file, setFile] = useState<File | null>(null);
+const DataBar: React.FC = () => {
+  const schema = zod.object({
+    mediaType: zod.string().min(1, { message: 'Required' }),
+    headline: zod.string().min(1, { message: 'Required' }),
+    caption: zod.string().min(1, { message: 'Required' }),
+    picUrl: zod.string().min(1, { message: 'Required' }),
+    document: zod.instanceof(File).optional(),
+  });
 
-  const handleFileChange = (event: ChangeEvent<HTMLInputElement>) => {
-    if (event.target.files) {
-      setFile(event.target.files[0]);
-    }
-  };
+  const methods = useForm<FormData>({
+    resolver: zodResolver(schema),
+  });
 
-  const handleSubmit = async () => {
-    if (!file) {
+  const onSubmit: SubmitHandler<FormData> = async (data) => {
+    if (!data.document) {
       alert('Please select a file first.');
       return;
     }
 
     const formData = new FormData();
-    formData.append('file', file);
+    formData.append('file', data.document);
 
     try {
       const response = await fetch('http://127.0.0.1:5000/upload', {
@@ -35,41 +43,29 @@ const DataBar = (props: Props) => {
         body: formData,
       });
       const responseData = await response.json();
+      console.log(responseData);
     } catch (error) {
       console.error('Error:', error);
     }
   };
 
-  const schema = zod.object({
-    mediaType: zod.string().min(1, { message: 'Required' }),
-    headline: zod.string().min(1, { message: 'Required' }),
-    caption: zod.string().min(1, { message: 'Required' }),
-    picUrl: zod.string().min(1, { message: 'Required' }),
-  });
-
-  const methods = useForm({
-    resolver: zodResolver(schema),
-  });
-
   return (
     <div className="relative mb-5 flex h-[200px] w-full items-start justify-center bg-neutral-80 px-[25px] py-[15px]">
       <FormProvider {...methods}>
         <form
-          className="flex w-[95%]  items-start justify-center"
-          onSubmit={methods.handleSubmit(props.onSubmit)}
+          className="flex w-[95%] items-start justify-center"
+          onSubmit={methods.handleSubmit(onSubmit)}
         >
-          <DateInputField name="" />
-          <div className="absolute left-0 right-0 z-50 mx-auto" style={{ width: 'fit-content' }}>
-            <Dropdown name="hello" items={[{ label: 'hello', value: '' }]} onChange={() => {}} />
-          </div>
-
-          <div className="z-40 flex w-full justify-end">
-            <FileInputField
-              className="border-none"
-              content={<Button type="secondary">Upload Data</Button>}
-              name="document-upload"
-            />
-          </div>
+          <DateInputField name="date" />
+          <Dropdown
+            name="mediaType"
+            items={[
+              { label: 'Video', value: 'video' },
+              { label: 'Image', value: 'image' },
+            ]}
+            onChange={() => {}}
+          />
+          <FileInputField name="document" content={<Button type="secondary">Upload Data</Button>} />
         </form>
       </FormProvider>
     </div>
