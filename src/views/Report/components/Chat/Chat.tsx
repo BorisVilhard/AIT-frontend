@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 
-type ChatData = {
+export type ChatData = {
   question: string;
   answer: string;
 };

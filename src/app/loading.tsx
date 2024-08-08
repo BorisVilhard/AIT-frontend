@@ -4,9 +4,11 @@ import React from 'react';
 // Define the component
 const Loading = () => {
   return (
-    <div className="relative flex justify-center items-center w-12 h-12">
-      <span className="inline-block w-12 h-12 rounded-full border-t-4 border-t-custom-white border-r-4 border-r-transparent animate-spin-slow"></span>
-      <span className="absolute top-0 left-0 w-12 h-12 rounded-full border-l-4 border-l-custom-orange border-b-4 border-b-transparent animate-spin-slow-reverse"></span>
+    <div className="absolute top-[40vh]">
+      <div className="relative flex h-12 w-12 items-center justify-center">
+        <span className="border-t-custom-white inline-block h-12 w-12 animate-spin-slow rounded-full border-r-4 border-t-4 border-r-transparent"></span>
+        <span className="border-l-custom-orange absolute left-0 top-0 h-12 w-12 animate-spin-slow-reverse rounded-full border-b-4 border-l-4 border-b-transparent"></span>
+      </div>
     </div>
   );
 };

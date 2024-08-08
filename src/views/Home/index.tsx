@@ -6,16 +6,15 @@ const Home = () => {
   return (
     <>
       <HeroSection />
-       <InfoCard
+      <InfoCard
         label="Analyze website user behavior to enhance your strategic advantage"
         imgSrc="/img/mac.png"
       />
       <InfoCard
-        reversedTransform
         label="Utilize AGI to aggregate information from all sources and provide succinct chart summaries"
         imgSrc="/img/mac.png"
       />
-      <Footer className='my-[100px]' />
+      <Footer className="my-[100px]" />
     </>
   );
 };

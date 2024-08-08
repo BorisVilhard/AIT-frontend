@@ -18,7 +18,13 @@ const InfoCard = ({ imgSrc, label }: Props) => {
         {label}
       </h1>
 
-      <Image className="z-20 w-[40vw]" src={imgSrc} width={550} height={550} alt="robot image" />
+      <Image
+        className="z-20 w-[100vw] md:w-[40vw]"
+        src={imgSrc}
+        width={550}
+        height={550}
+        alt="robot image"
+      />
     </div>
   );
 };

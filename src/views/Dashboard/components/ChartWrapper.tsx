@@ -2,7 +2,7 @@ import { ReactNode } from 'react';
 
 interface Props {
   title?: string;
-  value?: number;
+  value?: number | string;
   children: ReactNode;
   percentageDifference?: string;
   id?: string;
@@ -14,11 +14,11 @@ export const ChartWrapper = (props: Props) => {
   return (
     <div
       style={{ boxShadow: 'rgba(149, 157, 165, 0.2) 0px 8px 24px' }}
-      className={`relative m-[10px] h-[190px] w-fit flex-col items-stretch justify-between rounded-[10px] bg-shades-white p-[10px] ${props.className}`}
+      className={`relative m-[10px]  w-fit flex-col items-stretch justify-between rounded-[10px] bg-shades-white p-[10px] ${props.className}`}
       onClick={props.onClick}
     >
-      <h1 className={'mr-[5px] text-[16px] font-medium'}>{props.title}</h1>
-      <div className="flex items-center justify-between">
+      {props.title !== '' && <h1 className={'mr-[5px] text-[16px] font-medium'}>{props.title}</h1>}
+      <div>
         <h1 className={'font-500 mr-[10px] text-[35px]'}>{props.value}</h1>
         {props.percentageDifference && (
           <div className="absolute bottom-[10px] left-[2px]">

@@ -5,7 +5,6 @@ import { useFormContext } from 'react-hook-form';
 import Button from '../Button/Button';
 import { AiOutlineDown, AiOutlineUp } from 'react-icons/ai';
 
-
 interface Props {
   name: string;
   value?: string;
@@ -54,13 +53,13 @@ const Dropdown = (props: Props) => {
   }, [props.items, selectedOption]);
 
   return (
-    <div ref={dropdownRef} data-qa="dropdown" className="relative w-full">
+    <div ref={dropdownRef} data-qa="dropdown" className={`relative ${props.className}`}>
       <Button
         data-qa="select-button"
         className={classNames(
           'paragraph-P1-regular flex h-[48px] w-full cursor-pointer items-center justify-between border-[1px] border-primary-20 px-[15px] py-[11px] text-neutral-90',
           {
-            'rounded-b-md border border-primary-90': isOpen,
+            'rounded-b-[1px] rounded-t-[10px]': isOpen,
             rounded: !isOpen,
           },
         )}
@@ -70,21 +69,21 @@ const Dropdown = (props: Props) => {
         <div className="flex items-center gap-[5px]">
           {activeOption?.icon}
           {activeOption?.label}
-        
+          {!activeOption && props.items[0].icon}
+          {!activeOption && props.items[0].label}
         </div>
-       {isOpen ? <AiOutlineUp color='white'/> : <AiOutlineDown  color='white' /> }
+        {isOpen ? <AiOutlineUp color="white" /> : <AiOutlineDown color="white" />}
       </Button>
-     
+
       {isOpen && (
-        
         <ul
           data-qa="select-options"
-          className="absolute z-10 max-h-60 w-full overflow-auto rounded-b-md border-x-[1px] border-b-[1px] border-x-primary-90 border-b-primary-90 bg-shades-white"
+          className="absolute z-50 max-h-60 w-full overflow-auto rounded-b-md border-x-[1px] border-b-[1px] border-x-primary-90 border-b-primary-90 bg-shades-white"
         >
           {props.items.map((option) => (
             <li
               key={option.value}
-              className="paragraph-P1-regular mx-1 my-[5px] flex cursor-pointer items-center gap-[5px] rounded-[5px] px-3 py-2 hover:bg-primary-10 hover:font-bold"
+              className="paragraph-P1-regular z-50 mx-1 my-[5px] flex cursor-pointer items-center gap-[5px] rounded-[5px] px-3 py-2 hover:bg-primary-10 hover:font-bold"
               onClick={(e) => handleOptionSelect(option, e)}
             >
               {option.icon} {option.label}

@@ -5,15 +5,14 @@ const HeroSection = () => {
   return (
     <div
       style={{
-        backgroundImage: `url(${'/img/heroBg.svg'})`,
         backgroundSize: 'cover',
         backgroundPosition: 'center',
       }}
-      className="flex h-[92vh] w-full items-center justify-between px-[5vw] pb-[10vh] text-shades-white"
+      className="flex h-[92vh] w-full items-center justify-between px-[5vw] pb-[10vh] text-shades-white lg:bg-[url('/img/heroBg.svg')]"
     >
-      <div className="relative flex max-w-[40vw] flex-col">
+      <div className="relative flex w-full flex-col lg:max-w-[40vw]">
         <p className="p-2 font-bold text-primary-90">Run your company smoothly</p>
-        <h1 className="text-5x font-bold text-shades-black sm:text-6xl md:py-6 md:text-[4.5vw]">
+        <h1 className="text-[60px] font-bold text-shades-black md:text-[70px] lg:py-6 lg:text-[4.5vw] lg:leading-[10vh]">
           Enhance Performance with Smart Data Solutions
         </h1>
         <Button
@@ -23,7 +22,7 @@ const HeroSection = () => {
           Get Started
         </Button>
       </div>
-      <div className="relative ml-[10vw]  hidden w-full sm:hidden md:hidden lg:block">
+      <div className="relative ml-[10vw]  hidden w-full md:hidden lg:block">
         <DataFlowAnimation />
       </div>
     </div>
